@@ -1,6 +1,36 @@
 const flowConfig = {
-  "id": "b8c48754-0479-4600-928a-6651d446c051",
+  "id": "711de9c6-abc1-4d50-a45b-38fb5341b2ad",
   "name": "Able Easter",
+  "edges": [
+    {
+      "id": "triggerNode_1-LLMNode_513",
+      "type": "defaultEdge",
+      "source": "triggerNode_1",
+      "target": "LLMNode_513",
+      "sourceHandle": "bottom",
+      "targetHandle": "top"
+    },
+    {
+      "id": "LLMNode_513-firecrawlNode_210",
+      "type": "defaultEdge",
+      "source": "LLMNode_513",
+      "target": "firecrawlNode_210",
+      "sourceHandle": "bottom",
+      "targetHandle": "top"
+    },
+    {
+      "id": "firecrawlNode_210-plus-node-addNode_triggerNode_1570",
+      "type": "defaultEdge",
+      "source": "firecrawlNode_210",
+      "target": "plus-node-addNode_triggerNode_1570",
+      "sourceHandle": "bottom",
+      "targetHandle": "top"
+    }
+  ],
+  "status": "inactive",
+  "created_at": "2026-01-21T12:44:56.986513+00:00",
+  "slug": "AbleEaster",
+  "trigger_id": 2,
   "nodes": [
     {
       "id": "triggerNode_1",
@@ -65,7 +95,7 @@ const flowConfig = {
               "params": {},
               "configName": "configA",
               "model_name": "gpt-4o-mini",
-              "credentialId": "6aa2c475-ccfc-4041-82b5-514fc7b8c3fd",
+              "credentialId": "54755a46-676f-4e50-aac3-aa49d3b4b37f",
               "provider_name": "openai",
               "credential_name": "OpenAI"
             }
@@ -227,35 +257,7 @@ const flowConfig = {
         "y": 390
       }
     }
-  ],
-  "edges": [
-    {
-      "id": "triggerNode_1-LLMNode_513",
-      "type": "defaultEdge",
-      "source": "triggerNode_1",
-      "target": "LLMNode_513",
-      "sourceHandle": "bottom",
-      "targetHandle": "top"
-    },
-    {
-      "id": "LLMNode_513-firecrawlNode_210",
-      "type": "defaultEdge",
-      "source": "LLMNode_513",
-      "target": "firecrawlNode_210",
-      "sourceHandle": "bottom",
-      "targetHandle": "top"
-    },
-    {
-      "id": "firecrawlNode_210-plus-node-addNode_triggerNode_1570",
-      "type": "defaultEdge",
-      "source": "firecrawlNode_210",
-      "target": "plus-node-addNode_triggerNode_1570",
-      "sourceHandle": "bottom",
-      "targetHandle": "top"
-    }
-  ],
-  "status": "inactive",
-  "created_at": "2026-01-21T11:31:47.757175+00:00"
+  ]
 };
 
 export async function getNodesAndEdges(): Promise<{
