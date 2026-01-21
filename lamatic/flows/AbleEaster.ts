@@ -84,6 +84,133 @@ const flowConfig = {
       "selected": false
     },
     {
+      "id": "firecrawlNode_210",
+      "data": {
+        "label": "dynamicNode node",
+        "logic": [
+          {
+            "type": "retry",
+            "config": "Config A",
+            "delayConfig": 300,
+            "maxAttempts": 3
+          },
+          {
+            "type": "fallback",
+            "config": "Config A",
+            "onTimeout": false,
+            "fallbackConfig": "Config B"
+          }
+        ],
+        "modes": {
+          "webhook": "list"
+        },
+        "nodeId": "firecrawlNode",
+        "values": {
+          "id": "firecrawlNode_210",
+          "url": "https://config1",
+          "mode": "sync",
+          "urls": "",
+          "delay": 0,
+          "limit": 10,
+          "model": "spark-1-mini",
+          "mobile": false,
+          "prompt": "",
+          "search": "",
+          "timeout": 30000,
+          "waitFor": 2000,
+          "webhook": "",
+          "nodeName": "Firecrawl",
+          "agentUrls": "",
+          "agentJobId": "",
+          "crawlDepth": 1,
+          "crawlLimit": 10,
+          "maxCredits": "",
+          "agentSchema": "",
+          "credentials": "Firecrawl",
+          "excludePath": [],
+          "excludeTags": [],
+          "includePath": [],
+          "includeTags": [],
+          "sitemapOnly": false,
+          "crawlSubPages": false,
+          "ignoreSitemap": false,
+          "webhookEvents": [
+            "completed",
+            "failed",
+            "page",
+            "started"
+          ],
+          "changeTracking": false,
+          "webhookHeaders": "",
+          "onlyMainContent": false,
+          "webhookMetadata": "",
+          "includeSubdomains": false,
+          "maxDiscoveryDepth": 1,
+          "allowBackwardLinks": false,
+          "allowExternalLinks": false,
+          "skipTlsVerification": false,
+          "ignoreQueryParameters": true,
+          "strictConstrainToURLs": false
+        },
+        "valuesB": {
+          "id": "firecrawlNode_210",
+          "url": "https://config2",
+          "mode": "sync",
+          "urls": "",
+          "delay": 0,
+          "limit": 10,
+          "model": "spark-1-mini",
+          "mobile": false,
+          "prompt": "",
+          "search": "",
+          "timeout": 30000,
+          "waitFor": 2000,
+          "nodeName": "Firecrawl",
+          "agentUrls": "",
+          "agentJobId": "",
+          "crawlDepth": 1,
+          "crawlLimit": 10,
+          "maxCredits": "",
+          "agentSchema": "",
+          "credentials": "Firecrawl",
+          "excludePath": [],
+          "excludeTags": [],
+          "includePath": [],
+          "includeTags": [],
+          "sitemapOnly": false,
+          "crawlSubPages": false,
+          "ignoreSitemap": false,
+          "webhookEvents": [
+            "completed",
+            "failed",
+            "page",
+            "started"
+          ],
+          "changeTracking": false,
+          "webhookHeaders": "",
+          "onlyMainContent": false,
+          "webhookMetadata": "",
+          "includeSubdomains": false,
+          "maxDiscoveryDepth": 1,
+          "allowBackwardLinks": false,
+          "allowExternalLinks": false,
+          "skipTlsVerification": false,
+          "ignoreQueryParameters": true,
+          "strictConstrainToURLs": false
+        }
+      },
+      "type": "dynamicNode",
+      "measured": {
+        "width": 216,
+        "height": 93
+      },
+      "position": {
+        "x": 0,
+        "y": 260
+      },
+      "selected": true
+    },
+    {
       "id": "plus-node-addNode_triggerNode_1570",
       "data": {
         "label": "+",
@@ -97,7 +224,7 @@ const flowConfig = {
       },
       "position": {
         "x": 0,
-        "y": 260
+        "y": 390
       }
     }
   ],
@@ -111,9 +238,17 @@ const flowConfig = {
       "targetHandle": "top"
     },
     {
-      "id": "LLMNode_513-plus-node-addNode_triggerNode_1570",
+      "id": "LLMNode_513-firecrawlNode_210",
       "type": "defaultEdge",
       "source": "LLMNode_513",
+      "target": "firecrawlNode_210",
+      "sourceHandle": "bottom",
+      "targetHandle": "top"
+    },
+    {
+      "id": "firecrawlNode_210-plus-node-addNode_triggerNode_1570",
+      "type": "defaultEdge",
+      "source": "firecrawlNode_210",
       "target": "plus-node-addNode_triggerNode_1570",
       "sourceHandle": "bottom",
       "targetHandle": "top"
