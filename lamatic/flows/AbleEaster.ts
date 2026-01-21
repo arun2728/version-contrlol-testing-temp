@@ -5,12 +5,20 @@ const flowConfig = {
     {
       "id": "triggerNode_1",
       "data": {
-        "modes": {},
-        "nodeId": "graphqlNode",
+        "modes": {
+          "folderUrl": "list"
+        },
+        "nodeId": "googleDriveNode",
         "values": {
-          "nodeName": "API Request",
-          "responeType": "realtime",
-          "advance_schema": "{\"sampleInput\":\"string\"}"
+          "id": "triggerNode_1",
+          "globs": [
+            "**"
+          ],
+          "nodeName": "Google Drive",
+          "syncMode": "incremental_append",
+          "folderUrl": "https://drive.google.com/drive/folders/1vUrqW5Q1VDd5tN9acm-dQYjrn7F_j59Z",
+          "credentials": "Google Drive OAuth",
+          "cronExpression": "0 0 00 ? * 1 * UTC"
         },
         "trigger": true
       },
@@ -76,31 +84,21 @@ const flowConfig = {
       "selected": false
     },
     {
-      "id": "responseNode_triggerNode_1",
+      "id": "plus-node-addNode_triggerNode_1570",
       "data": {
-        "label": "Response",
-        "nodeId": "graphqlResponseNode",
-        "values": {
-          "id": "responseNode_triggerNode_1",
-          "headers": "{\"content-type\":\"application/json\"}",
-          "retries": "0",
-          "nodeName": "API Response",
-          "webhookUrl": "",
-          "retry_delay": "0",
-          "outputMapping": "{\n  \"response\": \"{{LLMNode_513.output.generatedResponse}}\"\n}"
-        },
-        "isResponseNode": true
+        "label": "+",
+        "nodeId": "addNode",
+        "values": {}
       },
-      "type": "responseNode",
+      "type": "addNode",
       "measured": {
         "width": 216,
-        "height": 93
+        "height": 100
       },
       "position": {
         "x": 0,
         "y": 260
-      },
-      "selected": true
+      }
     }
   ],
   "edges": [
@@ -113,23 +111,15 @@ const flowConfig = {
       "targetHandle": "top"
     },
     {
-      "id": "LLMNode_513-responseNode_triggerNode_1",
+      "id": "LLMNode_513-plus-node-addNode_triggerNode_1570",
       "type": "defaultEdge",
       "source": "LLMNode_513",
-      "target": "responseNode_triggerNode_1",
+      "target": "plus-node-addNode_triggerNode_1570",
       "sourceHandle": "bottom",
       "targetHandle": "top"
-    },
-    {
-      "id": "response-trigger_triggerNode_1",
-      "type": "responseEdge",
-      "source": "triggerNode_1",
-      "target": "responseNode_triggerNode_1",
-      "sourceHandle": "to-response",
-      "targetHandle": "from-trigger"
     }
   ],
-  "status": "active",
+  "status": "inactive",
   "created_at": "2026-01-21T11:31:47.757175+00:00"
 };
 
