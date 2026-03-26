@@ -26,6 +26,58 @@ const flowConfig = {
       "selected": false
     },
     {
+      "id": "LLMNode_836",
+      "data": {
+        "label": "dynamicNode node",
+        "modes": {},
+        "nodeId": "LLMNode",
+        "values": {
+          "id": "LLMNode_836",
+          "tools": [],
+          "prompts": [
+            {
+              "id": "187c2f4b-c23d-4545-abef-73dc897d6b7b",
+              "role": "system",
+              "content": "You are an AI Assistant at a luxury hotel"
+            },
+            {
+              "id": "187c2f4b-c23d-4545-abef-73dc897d6b7d",
+              "role": "user",
+              "content": "What is check in time ?"
+            }
+          ],
+          "memories": "[]",
+          "messages": "[]",
+          "nodeName": "Generate Text",
+          "attachments": "",
+          "credentials": "",
+          "constitution_id": "",
+          "generativeModelName": [
+            {
+              "type": "generator/text",
+              "params": {},
+              "configName": "configA",
+              "model_name": "gpt-4",
+              "credentialId": "6aa2c475-ccfc-4041-82b5-514fc7b8c3fd",
+              "provider_name": "openai",
+              "credential_name": "OpenAI"
+            }
+          ],
+          "constitution_enabled": false
+        }
+      },
+      "type": "dynamicNode",
+      "measured": {
+        "width": 216,
+        "height": 93
+      },
+      "position": {
+        "x": 0,
+        "y": 130
+      },
+      "selected": true
+    },
+    {
       "id": "responseNode_triggerNode_1",
       "data": {
         "label": "Response",
@@ -47,15 +99,23 @@ const flowConfig = {
       },
       "position": {
         "x": 0,
-        "y": 130
+        "y": 260
       }
     }
   ],
   "edges": [
     {
-      "id": "triggerNode_1-responseNode_triggerNode_1-997",
+      "id": "triggerNode_1-LLMNode_836",
       "type": "defaultEdge",
       "source": "triggerNode_1",
+      "target": "LLMNode_836",
+      "sourceHandle": "bottom",
+      "targetHandle": "top"
+    },
+    {
+      "id": "LLMNode_836-responseNode_triggerNode_1",
+      "type": "defaultEdge",
+      "source": "LLMNode_836",
       "target": "responseNode_triggerNode_1",
       "sourceHandle": "bottom",
       "targetHandle": "top"
