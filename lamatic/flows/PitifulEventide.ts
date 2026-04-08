@@ -38,12 +38,12 @@ const flowConfig = {
             {
               "id": "187c2f4b-c23d-4545-abef-73dc897d6b7b",
               "role": "system",
-              "content": "You are an AI Assistant at a luxury hotel"
+              "content": "You are an AI Assistant at a luxury hotel and this time let's see if the prompts section works or not because if it doesnt we have a problem"
             },
             {
               "id": "187c2f4b-c23d-4545-abef-73dc897d6b7d",
               "role": "user",
-              "content": "What is check in time ?"
+              "content": "What is check in time ? You are an AI Assistant at a luxury hotel and this time let's see if the prompts section works or not because if it doesnt we have a problem"
             }
           ],
           "memories": "[]",
