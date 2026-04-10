@@ -75,7 +75,31 @@ const flowConfig = {
         "x": 0,
         "y": 130
       },
-      "selected": true
+      "selected": false
+    },
+    {
+      "id": "codeNode_709",
+      "data": {
+        "label": "dynamicNode node",
+        "logic": [],
+        "modes": {},
+        "nodeId": "codeNode",
+        "values": {
+          "id": "codeNode_709",
+          "code": "// Assign the value you want to return from this code node to `output`. \n// The `output` variable is already declared.\n{{triggerNode_1.output.sampleInput}}",
+          "nodeName": "Code"
+        }
+      },
+      "type": "dynamicNode",
+      "measured": {
+        "width": 216,
+        "height": 93
+      },
+      "position": {
+        "x": 0,
+        "y": 260
+      },
+      "selected": false
     },
     {
       "id": "responseNode_triggerNode_1",
@@ -99,7 +123,7 @@ const flowConfig = {
       },
       "position": {
         "x": 0,
-        "y": 260
+        "y": 390
       }
     }
   ],
@@ -113,9 +137,17 @@ const flowConfig = {
       "targetHandle": "top"
     },
     {
-      "id": "LLMNode_836-responseNode_triggerNode_1",
+      "id": "LLMNode_836-codeNode_709",
       "type": "defaultEdge",
       "source": "LLMNode_836",
+      "target": "codeNode_709",
+      "sourceHandle": "bottom",
+      "targetHandle": "top"
+    },
+    {
+      "id": "codeNode_709-responseNode_triggerNode_1",
+      "type": "defaultEdge",
+      "source": "codeNode_709",
       "target": "responseNode_triggerNode_1",
       "sourceHandle": "bottom",
       "targetHandle": "top"
