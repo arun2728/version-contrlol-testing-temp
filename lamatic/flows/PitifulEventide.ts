@@ -51,7 +51,7 @@ const flowConfig = {
           "nodeName": "Generate Text",
           "attachments": "",
           "credentials": "",
-          "constitution_id": "",
+          "constitution_id": "4eab1b3b-84a6-40b1-8453-e29c8247f595",
           "generativeModelName": [
             {
               "type": "generator/text",
@@ -63,7 +63,7 @@ const flowConfig = {
               "credential_name": "OpenAI"
             }
           ],
-          "constitution_enabled": false
+          "constitution_enabled": true
         }
       },
       "type": "dynamicNode",
@@ -75,7 +75,7 @@ const flowConfig = {
         "x": 0,
         "y": 130
       },
-      "selected": false
+      "selected": true
     },
     {
       "id": "codeNode_709",
