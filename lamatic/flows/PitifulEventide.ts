@@ -26,44 +26,32 @@ const flowConfig = {
       "selected": false
     },
     {
-      "id": "LLMNode_836",
+      "id": "docExtractorNode_812",
       "data": {
         "label": "dynamicNode node",
         "modes": {},
-        "nodeId": "LLMNode",
+        "nodeId": "docExtractorNode",
         "values": {
-          "id": "LLMNode_836",
-          "tools": [],
-          "prompts": [
+          "id": "docExtractorNode_812",
+          "schema": "",
+          "nodeName": "Doc Extractor",
+          "joinPages": true,
+          "documentUrl": "https://www.bookdio.org/_files/ugd/ef8af1_516ef3f4ef464f699b1786bcb683bf04.pdf",
+          "customPrompt": "",
+          "ocrModelName": [
             {
-              "id": "187c2f4b-c23d-4545-abef-73dc897d6b7b",
-              "role": "system",
-              "content": "You are an AI Assistant at a luxury hotel and this time let's see if the prompts section works or not because if it doesnt we have a problem"
-            },
-            {
-              "id": "187c2f4b-c23d-4545-abef-73dc897d6b7d",
-              "role": "user",
-              "content": "What is check in time ? You are an AI Assistant at a luxury hotel and this time let's see if the prompts section works or not because if it doesnt we have a problem"
-            }
-          ],
-          "memories": "[]",
-          "messages": "[]",
-          "nodeName": "Generate Text",
-          "attachments": "",
-          "credentials": "",
-          "constitution_id": "4eab1b3b-84a6-40b1-8453-e29c8247f595",
-          "generativeModelName": [
-            {
-              "type": "generator/text",
+              "type": "ocr/document",
               "params": {},
               "configName": "configA",
-              "model_name": "gpt-4",
-              "credentialId": "6aa2c475-ccfc-4041-82b5-514fc7b8c3fd",
-              "provider_name": "openai",
-              "credential_name": "OpenAI"
+              "model_name": "gemini/gemini-2.5-flash-lite",
+              "credentialId": "78b4d60b-c6a3-497e-81dd-f3321c361207",
+              "provider_name": "gemini",
+              "credential_name": "gemini"
             }
           ],
-          "constitution_enabled": true
+          "outputFormat": "markdown",
+          "mistralTableFormat": "markdown",
+          "mistralIncludeAnnotations": false
         }
       },
       "type": "dynamicNode",
@@ -76,30 +64,6 @@ const flowConfig = {
         "y": 130
       },
       "selected": true
-    },
-    {
-      "id": "codeNode_709",
-      "data": {
-        "label": "dynamicNode node",
-        "logic": [],
-        "modes": {},
-        "nodeId": "codeNode",
-        "values": {
-          "id": "codeNode_709",
-          "code": "// Assign the value you want to return from this code node to `output`. \n// The `output` variable is already declared.\n{{triggerNode_1.output.sampleInput}}",
-          "nodeName": "Code"
-        }
-      },
-      "type": "dynamicNode",
-      "measured": {
-        "width": 216,
-        "height": 93
-      },
-      "position": {
-        "x": 0,
-        "y": 260
-      },
-      "selected": false
     },
     {
       "id": "responseNode_triggerNode_1",
@@ -123,31 +87,23 @@ const flowConfig = {
       },
       "position": {
         "x": 0,
-        "y": 390
+        "y": 260
       }
     }
   ],
   "edges": [
     {
-      "id": "triggerNode_1-LLMNode_836",
+      "id": "triggerNode_1-docExtractorNode_812",
       "type": "defaultEdge",
       "source": "triggerNode_1",
-      "target": "LLMNode_836",
+      "target": "docExtractorNode_812",
       "sourceHandle": "bottom",
       "targetHandle": "top"
     },
     {
-      "id": "LLMNode_836-codeNode_709",
+      "id": "docExtractorNode_812-responseNode_triggerNode_1",
       "type": "defaultEdge",
-      "source": "LLMNode_836",
-      "target": "codeNode_709",
-      "sourceHandle": "bottom",
-      "targetHandle": "top"
-    },
-    {
-      "id": "codeNode_709-responseNode_triggerNode_1",
-      "type": "defaultEdge",
-      "source": "codeNode_709",
+      "source": "docExtractorNode_812",
       "target": "responseNode_triggerNode_1",
       "sourceHandle": "bottom",
       "targetHandle": "top"
