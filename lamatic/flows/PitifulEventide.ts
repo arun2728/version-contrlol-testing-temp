@@ -26,6 +26,36 @@ const flowConfig = {
       "selected": false
     },
     {
+      "id": "s3Node_436",
+      "data": {
+        "label": "dynamicNode node",
+        "logic": [],
+        "modes": {},
+        "nodeId": "s3Node",
+        "values": {
+          "id": "s3Node_436",
+          "action": "S3_GET_FILE",
+          "bucket": "lamatic-test-934384776909-eu-north-1-an",
+          "filePath": "https://lamatic-test-934384776909-eu-north-1-an.s3.eu-north-1.amazonaws.com/test.json",
+          "nodeName": "S3",
+          "folderPath": "",
+          "maxResults": 100,
+          "credentials": "ramandeep aws",
+          "filePattern": ""
+        }
+      },
+      "type": "dynamicNode",
+      "measured": {
+        "width": 216,
+        "height": 93
+      },
+      "position": {
+        "x": 225,
+        "y": 130
+      },
+      "selected": true
+    },
+    {
       "id": "docClassifierNode_960",
       "data": {
         "label": "Doc Classifier",
@@ -101,9 +131,9 @@ const flowConfig = {
       },
       "position": {
         "x": 225,
-        "y": 130
+        "y": 260
       },
-      "selected": true
+      "selected": false
     },
     {
       "id": "addNode_547",
@@ -121,7 +151,7 @@ const flowConfig = {
       },
       "position": {
         "x": 0,
-        "y": 260
+        "y": 390
       }
     },
     {
@@ -139,7 +169,7 @@ const flowConfig = {
       },
       "position": {
         "x": 450,
-        "y": 260
+        "y": 390
       }
     },
     {
@@ -165,19 +195,11 @@ const flowConfig = {
       },
       "position": {
         "x": 225,
-        "y": 390
+        "y": 520
       }
     }
   ],
   "edges": [
-    {
-      "id": "triggerNode_1-docClassifierNode_960",
-      "type": "defaultEdge",
-      "source": "triggerNode_1",
-      "target": "docClassifierNode_960",
-      "sourceHandle": "bottom",
-      "targetHandle": "top"
-    },
     {
       "id": "docClassifierNode_960-addNode_547",
       "data": {
@@ -215,6 +237,22 @@ const flowConfig = {
       "type": "defaultEdge",
       "source": "addNode_346",
       "target": "responseNode_triggerNode_1",
+      "sourceHandle": "bottom",
+      "targetHandle": "top"
+    },
+    {
+      "id": "triggerNode_1-s3Node_436",
+      "type": "defaultEdge",
+      "source": "triggerNode_1",
+      "target": "s3Node_436",
+      "sourceHandle": "bottom",
+      "targetHandle": "top"
+    },
+    {
+      "id": "s3Node_436-docClassifierNode_960",
+      "type": "defaultEdge",
+      "source": "s3Node_436",
+      "target": "docClassifierNode_960",
       "sourceHandle": "bottom",
       "targetHandle": "top"
     },
