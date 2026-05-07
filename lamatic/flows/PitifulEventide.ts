@@ -26,41 +26,18 @@ const flowConfig = {
       "selected": false
     },
     {
-      "id": "docClassifierNode_486",
+      "id": "docExtractorNode_746",
       "data": {
         "label": "dynamicNode node",
         "modes": {},
-        "nodeId": "docClassifierNode",
+        "nodeId": "docExtractorNode",
         "values": {
-          "id": "docClassifierNode_486",
-          "classes": [
-            {
-              "id": "cls_mor5fl0i_0mpkv",
-              "label": "Deed / Conveyance",
-              "description": "Warranty deeds, grant deeds, quitclaim deeds — transfers of property ownership. Very common throughout.",
-              "identifiableFields": "\"Grantor/Grantee\", \"convey and warrant\", notary acknowledgment, BK/PG stamp."
-            },
-            {
-              "id": "cls_mor5h1lp_9j3s1",
-              "label": "Mortgage / Deed of Trust",
-              "description": "Security instruments pledging the property as collateral. ",
-              "identifiableFields": "\"Borrower/Lender\", \"Security Instrument\", acceleration clauses, MERS references."
-            },
-            {
-              "id": "cls_mor5jpik_e6ek4",
-              "label": "Survey / Plot Map",
-              "description": "Boundary surveys and subdivision plats. ",
-              "identifiableFields": "metes-and-bounds descriptions, surveyor certifications, lot/block numbers."
-            },
-            {
-              "id": "cls_mor5kpwq_sltlr",
-              "label": "Architectural / Building Plan",
-              "description": "Structural drawings — floor plans, building sections, elevation diagrams. ",
-              "identifiableFields": "rotated pages, technical drawings, architect firm logos (e.g., Minno & Wasko)."
-            }
-          ],
-          "nodeName": "Doc Classifier",
+          "id": "docExtractorNode_746",
+          "schema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"page_meaning\": {\n      \"type\": \"string\",\n      \"required\": true,\n      \"description\": \"In 1-3 sentences, describe what this page is ABOUT using clear, domain-relevant keywords, WITHOUT including any instance-specific facts. Focus on the type of document and the legal, commercial, or informational purpose of this page. Allowed: generic descriptions like 'residential mortgage agreement for a single-family property', 'employment offer letter outlining compensation and duties', 'non-disclosure agreement defining confidentiality obligations', 'invoice page listing line-item charges for services'. Forbidden: any specific party names, company names, addresses, jurisdictions, book/page numbers, instrument numbers, tax IDs, or exact dates and amounts. If the page is mostly maps, diagrams, or tables, describe their conceptual purpose without quoting any labels or numbers.\"\n    },\n    \"mentioned_page_number\": {\n      \"type\": \"string\",\n      \"required\": true,\n      \"description\": \"The page number as it appears on this page, if any. Look for markers like 'Page 3', 'Page 3 of 10', 'P. 3', or Roman numerals such as 'iii'. Return the page number in a concise normalized form: prefer plain Arabic numerals (e.g., '3') when unambiguous; for compound formats you may return the full string (e.g., '3 of 10'). If no page number marker is visible on the page, return 'N/A'.\"\n    },\n    \"is_first_page\": {\n      \"type\": \"boolean\",\n      \"required\": true,\n      \"description\": \"Return true if this page appears to be the first page (or cover page) of a multi-page document, otherwise false. Signals for true include: a prominent document title near the top, opening clauses such as 'This Agreement', 'This Indenture', or 'Know All Men', introductory recitals ('Whereas' clauses), a clear introductory block of parties and roles, or a recording/filing stamp at the very top. If the page looks like a continuation of numbered sections, schedules, exhibits, signature pages, or maps with no clear introductory framing, return false.\"\n    },\n    \"is_last_page\": {\n      \"type\": \"boolean\",\n      \"required\": true,\n      \"description\": \"Return true if this page appears to be the final page of a document, otherwise false. Signals for true include: signature blocks (individual or corporate), acknowledgment/verification or notary sections, witness lines, closing attest language (e.g., 'In witness whereof'), or completion markers like 'End of Document' or page count indicators such as 'Page 10 of 10'. If the page looks like a middle page with ongoing clauses, schedules, or tables and no closing/signature structure, return false.\"\n    },\n    \"is_map\": {\n      \"type\": \"boolean\",\n      \"required\": true,\n      \"description\": \"Return true ONLY if this page is visually structured as a land map, tax map, subdivision plat, survey diagram, floor plan, or similar layout and is dominated by spatial graphics rather than linear text. Typical indicators: multiple adjacent shapes or parcels arranged in a grid or block layout; repeated numeric labels inside parcels (lot numbers, unit numbers); lines forming property boundaries, streets, or easements; measurements such as distances or bearings near lines; labels like 'LOT', 'BLOCK', 'PARCEL', or street names positioned inside the layout; rotated or scattered text aligned with shapes, with very little continuous paragraph flow. Return false if the page is primarily paragraphs, legal text, tables, or forms, follows a normal top-to-bottom reading order, or contains only small diagrams with mostly text, even if it references lots, parcels, or maps in the wording.\"\n    }\n  }\n}",
+          "nodeName": "Doc Extractor",
+          "joinPages": true,
           "documentUrl": "https://drive.google.com/uc?export=download&id=1d2R_6ONks8059ldjUcpC-gSZgAtawlqA",
+          "customPrompt": "",
           "ocrModelName": [
             {
               "type": "ocr/document",
@@ -72,26 +49,9 @@ const flowConfig = {
               "credential_name": "mistralll"
             }
           ],
-          "embeddingModelName": {
-            "type": "embedder/text",
-            "params": {},
-            "model_name": "text-embedding-ada-002",
-            "credentialId": "6aa2c475-ccfc-4041-82b5-514fc7b8c3fd",
-            "provider_name": "openai",
-            "credential_name": "OpenAI"
-          },
-          "enhanceDescriptions": true,
-          "generativeModelName": [
-            {
-              "type": "generator/text",
-              "params": {},
-              "configName": "configA",
-              "model_name": "gpt-4o",
-              "credentialId": "6aa2c475-ccfc-4041-82b5-514fc7b8c3fd",
-              "provider_name": "openai",
-              "credential_name": "OpenAI"
-            }
-          ]
+          "outputFormat": "json",
+          "mistralTableFormat": "markdown",
+          "mistralIncludeAnnotations": false
         }
       },
       "type": "dynamicNode",
@@ -134,17 +94,17 @@ const flowConfig = {
   ],
   "edges": [
     {
-      "id": "triggerNode_1-docClassifierNode_486",
+      "id": "triggerNode_1-docExtractorNode_746",
       "type": "defaultEdge",
       "source": "triggerNode_1",
-      "target": "docClassifierNode_486",
+      "target": "docExtractorNode_746",
       "sourceHandle": "bottom",
       "targetHandle": "top"
     },
     {
-      "id": "docClassifierNode_486-responseNode_triggerNode_1",
+      "id": "docExtractorNode_746-responseNode_triggerNode_1",
       "type": "defaultEdge",
-      "source": "docClassifierNode_486",
+      "source": "docExtractorNode_746",
       "target": "responseNode_triggerNode_1",
       "sourceHandle": "bottom",
       "targetHandle": "top"
