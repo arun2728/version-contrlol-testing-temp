@@ -26,62 +26,46 @@ const flowConfig = {
       "selected": false
     },
     {
-      "id": "plus-node-addNode_249196",
+      "id": "docExtractorNode_982",
       "data": {
-        "label": "+",
-        "nodeId": "addNode",
-        "values": {}
-      },
-      "type": "addNode",
-      "measured": {
-        "width": 216,
-        "height": 100
-      },
-      "position": {
-        "x": 0,
-        "y": 260
-      }
-    },
-    {
-      "id": "batchEndNode_908",
-      "data": {
-        "label": "batchEndNode node",
+        "label": "New",
         "modes": {},
-        "nodeId": "batchEndNode",
+        "nodeId": "docExtractorNode",
         "values": {
-          "nodeName": "Batch End",
-          "connectedTo": "batchNode_475"
+          "id": "docExtractorNode_982",
+          "schema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"schema_version\": {\n      \"type\": \"string\",\n      \"required\": true,\n      \"description\": \"Schema version identifier. Set to 'rent-roll-extractor/0.2'.\"\n    },\n    \"extracted_at\": {\n      \"type\": \"string\",\n      \"required\": true,\n      \"description\": \"ISO 8601 timestamp of extraction, e.g. '2026-05-08T20:00:00Z'.\"\n    },\n    \"agent_version\": {\n      \"type\": \"string\",\n      \"required\": true,\n      \"description\": \"Agent build identifier, e.g. 'doc-extractor-v0.2'.\"\n    },\n    \"property\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"folder\": {\n          \"type\": \"string\",\n          \"required\": true,\n          \"description\": \"Property folder identifier passed in to the agent (e.g. '1234_Main_St'). Echo verbatim from input; do NOT extract from the document.\"\n        },\n        \"borrower_name\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"value\": {\n              \"type\": \"string\",\n              \"required\": true,\n              \"description\": \"Legal name of the property owner / borrower of record. Verbatim including suffixes (LLC, LP, Inc., Trust). Typically appears as the Landlord in the lease preamble.\"\n            },\n            \"reasoning\": {\n              \"type\": \"string\",\n              \"required\": true,\n              \"description\": \"Brief explanation of how the value was derived (e.g. 'Listed as Landlord in preamble of all leases in folder; consistent across all 6 leases.').\"\n            },\n            \"source\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"page\": {\n                  \"type\": \"number\",\n                  \"required\": true,\n                  \"description\": \"Page number in the combined document.\"\n                },\n                \"quote\": {\n                  \"type\": \"string\",\n                  \"description\": \"Short verbatim quote supporting the value (preferred whenever possible).\"\n                },\n                \"filename\": {\n                  \"type\": \"string\",\n                  \"description\": \"Original source filename when the combined doc carries source tagging.\"\n                }\n              },\n              \"description\": \"Source citation: page (required), quote (preferred), filename (when multi-source).\",\n              \"additionalProperties\": true\n            }\n          },\n          \"description\": \"Borrower / property owner. Constant across all leases in the folder.\",\n          \"additionalProperties\": true\n        }\n      },\n      \"description\": \"Property-level header fields. Constant across all leases in the folder; denormalized onto every lease record so each row is self-contained for audit.\",\n      \"additionalProperties\": true\n    },\n    \"lease\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"lease_id\": {\n          \"type\": \"string\",\n          \"required\": true,\n          \"description\": \"Stable identifier for this lease, format '<property_folder>::<address_suite>' (e.g. '1234_Main_St::Suite_210').\"\n        },\n        \"source_documents\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"filename\": {\n                \"type\": \"string\",\n                \"required\": true,\n                \"description\": \"Original source filename merged into the combined document.\"\n              },\n              \"pages_in_combined\": {\n                \"type\": \"string\",\n                \"required\": true,\n                \"description\": \"Page range in the combined document, e.g. '1-42' or '43-48'.\"\n              }\n            },\n            \"additionalProperties\": true\n          },\n          \"description\": \"List of source files merged into the combined document for this lease (master lease, amendments, exhibits).\"\n        },\n        \"extraction\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"address_suite\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"value\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"Suite identifier(s). 'Suite 210' for single; 'Suites 210, 212' (comma-separated, ascending) for multiple; floor/unit identifier or 'Entire premises' if no suite designation. Do NOT include the property street address.\"\n                },\n                \"reasoning\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"Source basis (e.g. 'From Premises definition, Article 1.2.').\"\n                },\n                \"source\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"page\": {\n                      \"type\": \"number\",\n                      \"required\": true,\n                      \"description\": \"Page in combined document.\"\n                    },\n                    \"quote\": {\n                      \"type\": \"string\",\n                      \"description\": \"Short verbatim snippet.\"\n                    },\n                    \"filename\": {\n                      \"type\": \"string\",\n                      \"description\": \"Original source filename when multi-source.\"\n                    }\n                  },\n                  \"description\": \"Source citation.\",\n                  \"additionalProperties\": true\n                }\n              },\n              \"description\": \"Address / Suite # — Excel column A.\",\n              \"additionalProperties\": true\n            },\n            \"tenant_name\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"value\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"VERBATIM tenant legal name as it appears in the lease preamble. Exact case. Include suffixes (LLC, Inc., LP, Trust) and d/b/a clauses. Multiple co-tenants separated by ' ; '. Never normalize, never paraphrase.\"\n                },\n                \"reasoning\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"Brief source description (typically 'Verbatim from preamble.').\"\n                },\n                \"source\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"page\": {\n                      \"type\": \"number\",\n                      \"required\": true,\n                      \"description\": \"Page in combined document.\"\n                    },\n                    \"quote\": {\n                      \"type\": \"string\",\n                      \"description\": \"Short verbatim snippet.\"\n                    },\n                    \"filename\": {\n                      \"type\": \"string\",\n                      \"description\": \"Original source filename when multi-source.\"\n                    }\n                  },\n                  \"description\": \"Source citation.\",\n                  \"additionalProperties\": true\n                }\n              },\n              \"description\": \"Tenant Name — Excel column B. VERBATIM.\",\n              \"additionalProperties\": true\n            },\n            \"sq_ft\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"value\": {\n                  \"type\": \"number\",\n                  \"required\": true,\n                  \"description\": \"Total leased area in square feet (integer). Sum across multiple suites if applicable; use post-amendment SF if amendments changed the demise.\"\n                },\n                \"reasoning\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"Source basis; include per-suite breakdown if multi-suite, and any 'approximate' qualifier.\"\n                },\n                \"source\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"page\": {\n                      \"type\": \"number\",\n                      \"required\": true,\n                      \"description\": \"Page in combined document.\"\n                    },\n                    \"quote\": {\n                      \"type\": \"string\",\n                      \"description\": \"Short verbatim snippet.\"\n                    },\n                    \"filename\": {\n                      \"type\": \"string\",\n                      \"description\": \"Original source filename when multi-source.\"\n                    }\n                  },\n                  \"description\": \"Source citation.\",\n                  \"additionalProperties\": true\n                }\n              },\n              \"description\": \"Sq. Ft. — Excel column C.\",\n              \"additionalProperties\": true\n            },\n            \"lease_type\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"value\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"STRICT ENUM — must be exactly one of: 'Gross Lease' | 'Modified Gross' | 'Net (N)' | 'Double Net (NN)' | 'Triple Net (NNN)' | 'Absolute NNN' | 'Percentage Lease' | 'Ground Lease' | 'Fixed-Term' | 'Month-to-Month'. Determined by the expense-allocation language.\"\n                },\n                \"reasoning\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"MUST cite the section/clause that establishes who pays which expenses (taxes, insurance, CAM, structural). If ambiguous, raise AMBIGUOUS_LEASE_TYPE and pick conservatively.\"\n                },\n                \"source\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"page\": {\n                      \"type\": \"number\",\n                      \"required\": true,\n                      \"description\": \"Page in combined document.\"\n                    },\n                    \"quote\": {\n                      \"type\": \"string\",\n                      \"description\": \"Short verbatim snippet of the expense-allocation language.\"\n                    },\n                    \"filename\": {\n                      \"type\": \"string\",\n                      \"description\": \"Original source filename when multi-source.\"\n                    }\n                  },\n                  \"description\": \"Source citation.\",\n                  \"additionalProperties\": true\n                }\n              },\n              \"description\": \"Lease Type — Excel column D. Enum from the Lease Type Legend.\",\n              \"additionalProperties\": true\n            },\n            \"lease_start\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"value\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"ISO date YYYY-MM-DD. Commencement Date — NOT execution/signature date and NOT possession date unless explicitly equal.\"\n                },\n                \"reasoning\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"Where the commencement date came from (lease body, Commencement Date Memorandum, amendment, etc.).\"\n                },\n                \"source\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"page\": {\n                      \"type\": \"number\",\n                      \"required\": true,\n                      \"description\": \"Page in combined document.\"\n                    },\n                    \"quote\": {\n                      \"type\": \"string\",\n                      \"description\": \"Short verbatim snippet.\"\n                    },\n                    \"filename\": {\n                      \"type\": \"string\",\n                      \"description\": \"Original source filename when multi-source.\"\n                    }\n                  },\n                  \"description\": \"Source citation.\",\n                  \"additionalProperties\": true\n                }\n              },\n              \"description\": \"Lease Start Date — Excel column E.\",\n              \"additionalProperties\": true\n            },\n            \"lease_end\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"value\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"ISO date YYYY-MM-DD. The LATEST controlling expiration considering all amendments.\"\n                },\n                \"reasoning\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"If amendments extended/modified the term, state explicitly: 'Amendment N (date) extended original [date] term to [new date].' Original superseded date goes here, not in value.\"\n                },\n                \"source\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"page\": {\n                      \"type\": \"number\",\n                      \"required\": true,\n                      \"description\": \"Page in combined document of the controlling clause.\"\n                    },\n                    \"quote\": {\n                      \"type\": \"string\",\n                      \"description\": \"Short verbatim snippet.\"\n                    },\n                    \"filename\": {\n                      \"type\": \"string\",\n                      \"description\": \"Filename of the amendment (or master lease) that governs.\"\n                    }\n                  },\n                  \"description\": \"Source citation — should point to the controlling amendment when applicable.\",\n                  \"additionalProperties\": true\n                }\n              },\n              \"description\": \"Lease Expiration Date — Excel column F.\",\n              \"additionalProperties\": true\n            },\n            \"base_rent_increase\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"value\": {\n                  \"type\": \"number\",\n                  \"required\": true,\n                  \"description\": \"Annual escalation as decimal (e.g. 0.03 for 3%). For non-uniform schedules, use first-year-to-second-year change and list full schedule in comments.\"\n                },\n                \"type\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"Either 'stated' (explicit % in lease) or 'derived' (computed from rent schedule).\"\n                },\n                \"reasoning\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"If derived, show the two anchor values used. For CPI/FMV/non-numeric escalators, raise NON_NUMERIC_ESCALATOR and explain in comments.\"\n                },\n                \"source\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"page\": {\n                      \"type\": \"number\",\n                      \"required\": true,\n                      \"description\": \"Page in combined document.\"\n                    },\n                    \"quote\": {\n                      \"type\": \"string\",\n                      \"description\": \"Short verbatim snippet.\"\n                    },\n                    \"filename\": {\n                      \"type\": \"string\",\n                      \"description\": \"Original source filename when multi-source.\"\n                    }\n                  },\n                  \"description\": \"Source citation.\",\n                  \"additionalProperties\": true\n                }\n              },\n              \"description\": \"Base Rent Increases — Excel column G.\",\n              \"additionalProperties\": true\n            },\n            \"renewal_options\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"value\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"Format: 'N x M years' (e.g. '1 x 5 years' = one 5-year option; '2 x 5 years' = two 5-year options). If no renewal: '0 x 0 years'.\"\n                },\n                \"n\": {\n                  \"type\": \"number\",\n                  \"required\": true,\n                  \"description\": \"Count of renewal options (integer).\"\n                },\n                \"term_years\": {\n                  \"type\": \"number\",\n                  \"required\": true,\n                  \"description\": \"Term length per renewal option in years.\"\n                },\n                \"reasoning\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"Source basis. Notice windows, rent-on-renewal mechanics (FMV/fixed/step/CPI), and conditions go in comments, not here.\"\n                },\n                \"source\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"page\": {\n                      \"type\": \"number\",\n                      \"required\": true,\n                      \"description\": \"Page in combined document.\"\n                    },\n                    \"quote\": {\n                      \"type\": \"string\",\n                      \"description\": \"Short verbatim snippet.\"\n                    },\n                    \"filename\": {\n                      \"type\": \"string\",\n                      \"description\": \"Original source filename when multi-source.\"\n                    }\n                  },\n                  \"description\": \"Source citation.\",\n                  \"additionalProperties\": true\n                }\n              },\n              \"description\": \"Renewal Options — Excel column H.\",\n              \"additionalProperties\": true\n            },\n            \"monthly_base_rent\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"value\": {\n                  \"type\": \"number\",\n                  \"required\": true,\n                  \"description\": \"Current contractual monthly base rent in USD (2 dp), per the configured assumption_mode.\"\n                },\n                \"assumption_mode\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"Either 'current_fy_only' (rate in effect at report date) or 'weighted_across_fy' (weighted average across months of current and last FY when a step occurs mid-year). Defaults to current_fy_only if config not supplied.\"\n                },\n                \"reasoning\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"If weighted_across_fy, show the derivation; if current_fy_only with a mid-year step, note which step applied.\"\n                },\n                \"source\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"page\": {\n                      \"type\": \"number\",\n                      \"required\": true,\n                      \"description\": \"Page in combined document of the rent schedule or current rent statement.\"\n                    },\n                    \"quote\": {\n                      \"type\": \"string\",\n                      \"description\": \"Short verbatim snippet.\"\n                    },\n                    \"filename\": {\n                      \"type\": \"string\",\n                      \"description\": \"Original source filename when multi-source.\"\n                    }\n                  },\n                  \"description\": \"Source citation.\",\n                  \"additionalProperties\": true\n                }\n              },\n              \"description\": \"Monthly Base Rent — Excel column I.\",\n              \"additionalProperties\": true\n            },\n            \"annual_base_rent\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"value\": {\n                  \"type\": \"number\",\n                  \"required\": true,\n                  \"description\": \"Annual base rent in USD (2 dp). DERIVED.\"\n                },\n                \"formula\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"Literal formula string (e.g. 'monthly_base_rent * 12' or the weighted derivation expression).\"\n                },\n                \"reasoning\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"Confirm reconciliation: under current_fy_only must equal monthly_base_rent * 12 within $1 rounding tolerance.\"\n                }\n              },\n              \"description\": \"Annual Base Rent — Excel column J. DERIVED field; no source needed.\",\n              \"additionalProperties\": true\n            },\n            \"base_rent_per_sf\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"value\": {\n                  \"type\": \"number\",\n                  \"required\": true,\n                  \"description\": \"Annual base rent per sq ft in USD (2 dp). DERIVED. Do NOT emit if sq_ft = 0 (raise MISSING_SQ_FT instead).\"\n                },\n                \"formula\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"Literal formula: 'annual_base_rent / sq_ft'.\"\n                },\n                \"reasoning\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"Used for market-rate comparison (CoStar / Marcus & Millichap / CBRE).\"\n                }\n              },\n              \"description\": \"Base Rent / SF — Excel column K. DERIVED field.\",\n              \"additionalProperties\": true\n            },\n            \"additional_rent\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"value\": {\n                  \"type\": \"number\",\n                  \"required\": true,\n                  \"description\": \"Annual additional rent in USD. For Gross leases this is typically 0. Source preference: stated estimate > pro-rata x building expenses > prior-year actual (with PRIOR_YEAR_ACTUAL_USED flag).\"\n                },\n                \"components\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"cam\": {\n                      \"type\": \"number\",\n                      \"description\": \"Common Area Maintenance reimbursement (USD annual), if separately stated.\"\n                    },\n                    \"re_tax\": {\n                      \"type\": \"number\",\n                      \"description\": \"Real Estate Taxes reimbursement (USD annual), if separately stated.\"\n                    },\n                    \"insurance\": {\n                      \"type\": \"number\",\n                      \"description\": \"Insurance reimbursement (USD annual), if separately stated.\"\n                    }\n                  },\n                  \"description\": \"Optional component breakdown. Populate when the lease separately states each component; otherwise leave fields empty/zero and use the lump sum in 'value'.\",\n                  \"additionalProperties\": true\n                },\n                \"reasoning\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"Show the math when derived (e.g. 'Tenant pro-rata share 14.96% (4,250/28,400) x stated total building expenses $198,800 = $29,750'). For Gross leases: 'Gross lease — operating costs absorbed by landlord.'\"\n                },\n                \"source\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"page\": {\n                      \"type\": \"number\",\n                      \"required\": true,\n                      \"description\": \"Page in combined document of the additional-rent clause or expense estimate.\"\n                    },\n                    \"quote\": {\n                      \"type\": \"string\",\n                      \"description\": \"Short verbatim snippet.\"\n                    },\n                    \"filename\": {\n                      \"type\": \"string\",\n                      \"description\": \"Original source filename when multi-source.\"\n                    }\n                  },\n                  \"description\": \"Source citation.\",\n                  \"additionalProperties\": true\n                }\n              },\n              \"description\": \"Additional Rent (CAM; RE Tax; Ins) — Excel column L.\",\n              \"additionalProperties\": true\n            },\n            \"total_rent\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"value\": {\n                  \"type\": \"number\",\n                  \"required\": true,\n                  \"description\": \"Total annual rent in USD (2 dp). DERIVED.\"\n                },\n                \"formula\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"Literal formula: 'annual_base_rent + additional_rent'.\"\n                },\n                \"reasoning\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"Confirms reconciliation; downstream feeds the cash-flow Reimbursements line.\"\n                }\n              },\n              \"description\": \"Total Rent — Excel column M. DERIVED field.\",\n              \"additionalProperties\": true\n            },\n            \"total_rent_per_sf\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"value\": {\n                  \"type\": \"number\",\n                  \"required\": true,\n                  \"description\": \"Total rent per sq ft in USD (2 dp). DERIVED. Do NOT emit if sq_ft = 0 (raise MISSING_SQ_FT).\"\n                },\n                \"formula\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"Literal formula: 'total_rent / sq_ft'.\"\n                },\n                \"reasoning\": {\n                  \"type\": \"string\",\n                  \"required\": true,\n                  \"description\": \"All-in rate; compares directly against full-service market rents.\"\n                }\n              },\n              \"description\": \"Total Rent / SF — Excel column N. DERIVED field.\",\n              \"additionalProperties\": true\n            },\n            \"comments\": {\n              \"type\": \"string\",\n              \"required\": true,\n              \"description\": \"Long-form analyst-facing primer. MUST cover: (1) tenant/landlord finance breakdown — who pays taxes, insurance, CAM, utilities, structural; (2) material economic terms — expense stops, base-year limits, CAM caps, percentage-rent breakpoints, free rent, TI; (3) renewal mechanics — notice window, rent-on-renewal method; (4) termination/holdover; (5) other material clauses — co-tenancy, exclusivity, ROFR/ROFO. Use line breaks; ' - ' bullets are fine.\"\n            }\n          },\n          \"description\": \"The 14 per-lease fields extracted from the lease document, mapped to Excel columns A through O on the CRE — Rent Roll sheet.\",\n          \"additionalProperties\": true\n        }\n      },\n      \"description\": \"Per-lease record. One emitted per combined lease document.\",\n      \"additionalProperties\": true\n    },\n    \"flags\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"code\": {\n            \"type\": \"string\",\n            \"required\": true,\n            \"description\": \"Flag code from taxonomy: AMBIGUOUS_LEASE_TYPE | MISSING_FIELD | AMENDMENT_CONFLICT | LANDLORD_MISMATCH | IN_HOLDOVER | MISSING_SQ_FT | LEASEABLE_SF_DERIVED | NON_NUMERIC_ESCALATOR | PRIOR_YEAR_ACTUAL_USED | CAM_CAP_AT_LIMIT | MULTI_SUITE_SPLIT | NON_USD | OFF_MARKET_RENT.\"\n          },\n          \"field\": {\n            \"type\": \"string\",\n            \"description\": \"JSON path of the field this flag refers to (e.g. 'lease.extraction.lease_type'). Optional — omit if the flag is record-level.\"\n          },\n          \"severity\": {\n            \"type\": \"string\",\n            \"required\": true,\n            \"description\": \"One of 'info' | 'warn' | 'error'. 'error' blocks Excel population; 'warn' populates with caution; 'info' is informational.\"\n          },\n          \"message\": {\n            \"type\": \"string\",\n            \"required\": true,\n            \"description\": \"Human-readable explanation of the flag for the analyst.\"\n          }\n        },\n        \"additionalProperties\": true\n      },\n      \"description\": \"Flags raised during extraction. Empty array if none. Always populate — do not omit even when empty.\"\n    }\n  }\n}",
+          "nodeName": "Doc Extractor",
+          "joinPages": true,
+          "documentUrl": "https://drive.google.com/uc?export=download&id=1d2R_6ONks8059ldjUcpC-gSZgAtawlqA",
+          "ocrModelName": [
+            {
+              "type": "ocr/document",
+              "params": {},
+              "configName": "configA",
+              "model_name": "mistral-document-ai-2512",
+              "credentialId": "ff3e3c15-b3ba-4fc1-97b6-522c9b3c0d72",
+              "provider_name": "azure-ai-foundry",
+              "credential_name": "azuretest"
+            }
+          ],
+          "outputFormat": "json",
+          "extractionPrompt": "",
+          "mistralTableFormat": "html",
+          "extractionModelName": [
+            {
+              "type": "generator/text",
+              "params": {},
+              "configName": "configA",
+              "model_name": "gemini/gemini-2.0-flash",
+              "credentialId": "78b4d60b-c6a3-497e-81dd-f3321c361207",
+              "provider_name": "gemini",
+              "credential_name": "gemini"
+            }
+          ],
+          "mistralIncludeAnnotations": true
         }
       },
-      "type": "batchEndNode",
-      "measured": {
-        "width": 216,
-        "height": 93
-      },
-      "position": {
-        "x": 0,
-        "y": 390
-      }
-    },
-    {
-      "id": "batchNode_475",
-      "data": {
-        "label": "batchNode node",
-        "modes": {},
-        "nodeId": "batchNode",
-        "values": {
-          "id": "batchNode_475",
-          "endValue": "130",
-          "nodeName": "Batch",
-          "increment": 1,
-          "connectedTo": "batchEndNode_908",
-          "iterateOver": "range",
-          "initialValue": "10",
-          "iteratorValue": "[]",
-          "concurrencyLimit": 10
-        }
-      },
-      "type": "batchNode",
+      "type": "dynamicNode",
       "measured": {
         "width": 216,
         "height": 93
@@ -114,43 +98,23 @@ const flowConfig = {
       },
       "position": {
         "x": 0,
-        "y": 520
+        "y": 260
       }
     }
   ],
   "edges": [
     {
-      "id": "triggerNode_1-batchNode_475-611",
+      "id": "triggerNode_1-docExtractorNode_982-253",
       "type": "defaultEdge",
       "source": "triggerNode_1",
-      "target": "batchNode_475",
+      "target": "docExtractorNode_982",
       "sourceHandle": "bottom",
       "targetHandle": "top"
     },
     {
-      "id": "batchNode_475-plus-node-addNode_249196-913",
-      "data": {
-        "condition": "Batch Start",
-        "invisible": true
-      },
-      "type": "conditionEdge",
-      "source": "batchNode_475",
-      "target": "plus-node-addNode_249196",
-      "sourceHandle": "bottom",
-      "targetHandle": "top"
-    },
-    {
-      "id": "plus-node-addNode_249196-batchEndNode_908-723",
+      "id": "docExtractorNode_982-responseNode_triggerNode_1-937",
       "type": "defaultEdge",
-      "source": "plus-node-addNode_249196",
-      "target": "batchEndNode_908",
-      "sourceHandle": "bottom",
-      "targetHandle": "top"
-    },
-    {
-      "id": "batchEndNode_908-responseNode_triggerNode_1-184",
-      "type": "defaultEdge",
-      "source": "batchEndNode_908",
+      "source": "docExtractorNode_982",
       "target": "responseNode_triggerNode_1",
       "sourceHandle": "bottom",
       "targetHandle": "top"
@@ -162,29 +126,6 @@ const flowConfig = {
       "target": "responseNode_triggerNode_1",
       "sourceHandle": "to-response",
       "targetHandle": "from-trigger"
-    },
-    {
-      "id": "batchNode_475-batchEndNode_908-505",
-      "data": {
-        "condition": "Batch"
-      },
-      "type": "loopEdge",
-      "source": "batchNode_475",
-      "target": "batchEndNode_908",
-      "sourceHandle": "bottom",
-      "targetHandle": "top"
-    },
-    {
-      "id": "batchEndNode_908-batchNode_475-664",
-      "data": {
-        "condition": "Batch",
-        "invisible": true
-      },
-      "type": "loopEdge",
-      "source": "batchEndNode_908",
-      "target": "batchNode_475",
-      "sourceHandle": "bottom",
-      "targetHandle": "top"
     }
   ],
   "status": "active",
